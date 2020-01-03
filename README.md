@@ -16,6 +16,7 @@ import (
 func main() {
 	mainLogger := log.NewLogger("main")
 	log.SetTxtLogger()
-	mainLogger.WithFields(logrus.Fields{"animal": "walrus", "language": "go"})
+	secondLogger := mainLogger.WithFields(logrus.Fields{"animal": "walrus", "language": "go"})
+	secondLogger.Info("hello")
 }
 ```
