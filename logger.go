@@ -45,9 +45,13 @@ func SetJsonLogger() {
 
 // SetTxtLogger sets the text logging format of the main logger
 func SetTxtLogger() {
-	logger.Formatter = &MyFormatter{
-		TimestampFormat: "2006-01-02 15:04:05",
-		LevelDesc:       []string{"PANC", "FATL", "ERRO", "WARN", "INFO", "DEBG"},
-	}
+	logger.Formatter = NewMyFormatter()
+	logger.AddHook(&ContextHook{})
+}
+
+// SetTxtFormatterForLogger prepare txt logger for the given logger
+func SetTxtFormatterForLogger(logger *logrus.Logger) {
+	logger.Formatter = NewMyFormatter()
+	logger.ReportCaller = true
 	logger.AddHook(&ContextHook{})
 }

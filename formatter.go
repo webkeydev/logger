@@ -12,6 +12,13 @@ type MyFormatter struct {
 	LevelDesc       []string
 }
 
+func NewMyFormatter() *MyFormatter {
+	return &MyFormatter{
+		TimestampFormat: "2006-01-02 15:04:05",
+		LevelDesc:       []string{"PANC", "FATL", "ERRO", "WARN", "INFO", "DEBG"},
+	}
+}
+
 func (f *MyFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	var fields string
 	keys := make([]string, 0, len(entry.Data))
@@ -31,7 +38,7 @@ func (f *MyFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	}
 
 	if _, ok := entry.Data["tag"]; !ok {
-		entry.Data["tag"] = ""
+		entry.Data["tag"] = "main"
 	}
 
 	return []byte(fmt.Sprintf("%s %s [%s] %s%s: %s\n", entry.Time.Format(f.TimestampFormat), f.LevelDesc[entry.Level], entry.Data["tag"], fields, entry.Data["source"], entry.Message)), nil
