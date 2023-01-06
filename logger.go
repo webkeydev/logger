@@ -1,29 +1,12 @@
 package logger
 
 import (
-	"os"
-
 	"github.com/sirupsen/logrus"
 )
 
-var logger = &logrus.Logger{
-	Out:          os.Stdout,
-	Level:        logrus.InfoLevel,
-	Hooks:        make(logrus.LevelHooks),
-	ReportCaller: true,
-	Formatter: &logrus.JSONFormatter{
-		TimestampFormat: "2006-01-02 15:04:05",
-	},
-}
-
 // NewLogger creates a new context logger
 func NewLogger(tag string) *logrus.Entry {
-	return logger.WithField("tag", tag)
-}
-
-// Logger exports the main logger
-func Logger() *logrus.Logger {
-	return logger
+	return logrus.WithFields(logrus.Fields{"tag": tag})
 }
 
 // SetLoggerLevel sets the logging level of the main logger
@@ -32,21 +15,25 @@ func SetLoggerLevel(lvl string) error {
 	if err != nil {
 		return err
 	}
-	logger.SetLevel(level)
+	logrus.StandardLogger().SetLevel(level)
 	return nil
 }
 
-// SetJsonLogger sets the json logging format of the main logger
+// SetJsonLogger sets the json logging format of the std logger
 func SetJsonLogger() {
-	logger.Formatter = &logrus.JSONFormatter{
+	std := logrus.StandardLogger()
+	std.ReportCaller = true
+	std.Formatter = &logrus.JSONFormatter{
 		TimestampFormat: "2006-01-02 15:04:05",
 	}
 }
 
-// SetTxtLogger sets the text logging format of the main logger
+// SetTxtLogger sets the text logging format of the std logger
 func SetTxtLogger() {
-	logger.Formatter = NewMyFormatter()
-	logger.AddHook(&ContextHook{})
+	std := logrus.StandardLogger()
+	std.Formatter = NewMyFormatter()
+	std.ReportCaller = true
+	std.AddHook(&ContextHook{})
 }
 
 // SetTxtFormatterForLogger prepare txt logger for the given logger

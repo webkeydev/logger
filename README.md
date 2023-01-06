@@ -10,13 +10,16 @@ package main
 
 import (
 	"github.com/sirupsen/logrus"
-	log "github.com/webkeydev/logger"
+	"github.com/webkeydev/logger"
+)
+
+var (
+	log = logger.NewLogger("main")
 )
 
 func main() {
-	mainLogger := log.NewLogger("main")
-	log.SetTxtLogger()
-	secondLogger := mainLogger.WithFields(logrus.Fields{"animal": "walrus", "language": "go"})
+	logger.SetTxtLogger()
+	secondLogger := log.WithFields(logrus.Fields{"animal": "walrus", "language": "go"})
 	secondLogger.Info("hello")
 }
 ```
